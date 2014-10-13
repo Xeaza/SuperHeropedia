@@ -10,7 +10,7 @@
 
 @interface SuperHeroesViewController () <UITableViewDelegate, UITableViewDataSource>
 
-@property NSDictionary *supermanDictionary;
+@property NSArray *superHeroes;
 
 @end
 
@@ -18,19 +18,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.supermanDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"Superman", @"name", @"Krypton", @"home", nil];
+    NSDictionary *supermanDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"Superman", @"name", @"Krypton", @"home", nil];
+    self.superHeroes = [NSArray arrayWithObjects:supermanDictionary, supermanDictionary, nil];
+
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return self.superHeroes.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-    cell.textLabel.text = [self.supermanDictionary objectForKey:@"name"];
-    cell.detailTextLabel.text = [self.supermanDictionary objectForKey:@"home"];
+    NSDictionary *superHeroDictionary = [self.superHeroes objectAtIndex:indexPath.row];
+    cell.textLabel.text = [superHeroDictionary objectForKey:@"name"];
+    cell.detailTextLabel.text = [superHeroDictionary objectForKey:@"home"];
     return cell;
 }
 
