@@ -57,6 +57,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Known Superheroes" id="1f8-ko-mnG"/>
+                    <connections>
+                        <outlet property="tableView" destination="F1I-GT-cY7" id="Y9w-fw-apV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

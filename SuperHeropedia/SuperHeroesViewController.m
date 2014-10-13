@@ -11,6 +11,7 @@
 @interface SuperHeroesViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property NSArray *superHeroes;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
@@ -18,9 +19,25 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSDictionary *supermanDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"Superman", @"name", @"Krypton", @"home", nil];
-    self.superHeroes = [NSArray arrayWithObjects:supermanDictionary, supermanDictionary, nil];
 
+    NSURL *url = [NSURL URLWithString:@"https://s3.amazonaws.com/mobile-makers-lib/superheroes.json"];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+    {
+        NSError *jsonError;
+        self.superHeroes = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+
+        if (connectionError != nil)
+        {
+            NSLog(@"Connection error: %@", connectionError.localizedDescription);
+        }
+        if (jsonError != nil)
+        {
+            NSLog(@"JSON error: %@", jsonError.localizedDescription);
+        }
+
+        [self.tableView reloadData];
+    }];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -33,7 +50,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     NSDictionary *superHeroDictionary = [self.superHeroes objectAtIndex:indexPath.row];
     cell.textLabel.text = [superHeroDictionary objectForKey:@"name"];
-    cell.detailTextLabel.text = [superHeroDictionary objectForKey:@"home"];
+    cell.detailTextLabel.text = [superHeroDictionary objectForKey:@"description"];
     return cell;
 }
 
